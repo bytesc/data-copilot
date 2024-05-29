@@ -3,7 +3,7 @@ import pandas as pd
 from pandasai import Agent, SmartDatalake
 import matplotlib.pyplot as plt
 
-import utils.read_db
+import data_access.read_db
 from llm_access.qwen_access import llm
 from output_parsing import parse_img
 from input_process import input_process
@@ -18,7 +18,7 @@ import pywebio
 
 def main():
     while 1:
-        dict_data = utils.read_db.get_data_from_db()
+        dict_data = data_access.read_db.get_data_from_db()
         list_data = list(dict_data.values())
 
         # from langchain_community.llms.tongyi import Tongyi
