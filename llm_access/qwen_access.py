@@ -22,8 +22,13 @@ llm = Tongyi(dashscope_api_key=get_api.get_api_key_from_file(),
 # llm = HuggingFacePipeline(pipeline=pipe)
 
 
-if __name__ == "__main__":
-    prompt = PromptTemplate(template=" ", input_variables=["question"])
+def call_llm(question):
+    prompt = PromptTemplate(template="{question}", input_variables=["question"])
     llm_chain = LLMChain(prompt=prompt, llm=llm)
-    ans = llm_chain.invoke("你好")
-    print(ans)
+    ans = llm_chain.invoke(question)
+    return ans["text"]
+
+
+if __name__ == "__main__":
+
+    print(call_llm("你好"))
