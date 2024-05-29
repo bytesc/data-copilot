@@ -1,0 +1,7 @@
+.idea
+__pycache__/
+
+*.log
+llm_access/api_key.txt
+output_img/
+cache/

@@ -1,0 +1,32 @@
+docker pull ankane/pgvector
+# docker pull pgvector/pgvector:pg16
+
+docker run --姓名 pgvector  -e POSTGRES_PASSWORD=123456 -p 5434:5432 -d ankane/pgvector
+
+psql -h localhost -p 5434 -U postgres
+
+CREATE DATABASE test;
+
+\l
+\c test
+
+CREATE TABLE test (
+    id serial PRIMARY KEY,
+    姓名 varchar(50),
+    email varchar(100),
+    created_date date
+);
+
+\d
+\dt
+
+
+
+docker restart pgvector
+docker stop pgvector
+docker ps
+
+docker exec -i -t 《id》 /bin/bash
+
+docker export f299f501774c > 姓名.tar
+docker import - new_姓名 < 姓名.tar
