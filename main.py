@@ -38,6 +38,7 @@ def main():
         # ans = lake.chat('在哪 2 个国家销量最少？ ，同时画出它们的饼图')   # 同时给出pandas
         # ans = lake.chat('查询Liam 的工资')
 
+        pywebio.output.clear()
         pywebio.output.popup("加载中", [
             pywebio.output.put_loading(),
         ])
@@ -82,8 +83,9 @@ def main():
             pywebio.output.popup("继续", [
                 pywebio.output.put_text("高级模式已启动")
             ])
-            pywebio.output.put_html(html)
 
+            pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> '+html + "</div>")
+            pywebio.output.put_html('<div style="width: 100%; height: 180vh;"></div>')
 
 if __name__ == "__main__":
     pywebio.start_server(main,
