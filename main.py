@@ -17,28 +17,33 @@ import pywebio
 
 
 def main():
+
+    pywebio.output.put_markdown("# Data Copilot")
+    pywebio.output.put_markdown("## 自然语言数据库查询")
+
+    dict_data = data_access.read_db.get_data_from_db()
+    list_data = list(dict_data.values())
+    pywebio.output.put_table([list(dict_data.keys())])
+
+    # from langchain_community.llms.tongyi import Tongyi
+    # model = "qwen-turbo"
+    # llm = Tongyi(dashscope_api_key="key",
+    #              model_name=model)
+
+    lake = SmartDatalake(list_data, config={"llm": llm,
+                                            "save_charts": True,
+                                            "save_charts_path": "./tmp_imgs/",
+                                            "open_charts": False,
+                                            "enable_cache": False,
+                                            "max_retries": 5})
+
+    # 获取用户输入
+    question = pywebio.input.input("请输入你的问题")
+    # ans = lake.chat('在哪 2 个国家销量最少？ ，同时画出它们的饼图')   # 同时给出pandas
+    # ans = lake.chat('查询Liam 的工资')
+
     while 1:
-        dict_data = data_access.read_db.get_data_from_db()
-        list_data = list(dict_data.values())
 
-        # from langchain_community.llms.tongyi import Tongyi
-        # model = "qwen-turbo"
-        # llm = Tongyi(dashscope_api_key="key",
-        #              model_name=model)
-
-        lake = SmartDatalake(list_data, config={"llm": llm,
-                                                "save_charts": True,
-                                                "save_charts_path": "./tmp_imgs/",
-                                                "open_charts": False,
-                                                "enable_cache": False,
-                                                "max_retries": 5})
-
-        # 获取用户输入
-        question = pywebio.input.input("请输入你的问题")
-        # ans = lake.chat('在哪 2 个国家销量最少？ ，同时画出它们的饼图')   # 同时给出pandas
-        # ans = lake.chat('查询Liam 的工资')
-
-        pywebio.output.clear()
         pywebio.output.popup("加载中", [
             pywebio.output.put_loading(),
         ])
@@ -50,13 +55,19 @@ def main():
         print(ans, "\n--------------------------------")
 
         img_path = parse_img.parse_output_img(ans)
-        # print("img_path:", img_path)
-        graph_img = PIL.Image.open(img_path)
+        if img_path is not None:
+            # print("img_path:", img_path)
+            graph_img = PIL.Image.open(img_path)
 
-        pywebio.output.popup("结果", [
-            pywebio.output.put_text(ans),
-            pywebio.output.put_image(graph_img)
-        ])
+            pywebio.output.popup("结果", [
+                pywebio.output.put_text(ans),
+                pywebio.output.put_image(graph_img)
+            ])
+        else:
+            pywebio.output.popup("结果", [
+                pywebio.output.put_text(ans),
+                pywebio.output.put_text("画图失败"),
+            ])
 
         # 定义两个按钮的操作
         actions = [
@@ -66,26 +77,45 @@ def main():
         # 显示按钮并获取用户点击的结果
         selected_action = pywebio.input.actions('是否对结果满意', actions)
         # 根据用户的选择输出不同的信息
+        if selected_action == 'y':
+            pywebio.output.put_text("刷新以输入新的查询")
+            pywebio.session.set_env()
+            break
         if selected_action == 'n':
-            pywebio.output.popup("高级模式加载中", [
-                pywebio.output.put_loading(),
-            ])
-            lake = SmartDatalake(list_data, config={"llm": llm,
-                                                    "save_charts": True,
-                                                    "save_charts_path": "./tmp_imgs/",
-                                                    "open_charts": False,
-                                                    "enable_cache": False,
-                                                    "max_retries": 5})
-            df_ans = lake.chat(question + "return pandas dataframe only")
-            print(df_ans, "\n--------------------------------")
-            from manuel_mode import pandas_html
-            html = pandas_html.get_html(df_ans)
-            pywebio.output.popup("继续", [
-                pywebio.output.put_text("高级模式已启动")
-            ])
+            # 定义两个按钮的操作
+            actions = [
+                {'label': '重新查询', 'value': 'c'},
+                {'label': '高级模式', 'value': 'g'}
+            ]
+            # 显示按钮并获取用户点击的结果
+            selected_action = pywebio.input.actions('接下来', actions)
 
-            pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> '+html + "</div>")
-            pywebio.output.put_html('<div style="width: 100%; height: 180vh;"></div>')
+            if selected_action == 'g':
+                pywebio.output.popup("高级模式加载中", [
+                    pywebio.output.put_loading(),
+                ])
+                lake = SmartDatalake(list_data, config={"llm": llm,
+                                                        "save_charts": True,
+                                                        "save_charts_path": "./tmp_imgs/",
+                                                        "open_charts": False,
+                                                        "enable_cache": False,
+                                                        "max_retries": 5})
+                df_ans = lake.chat(question + "return pandas dataframe only")
+                print(df_ans, "\n--------------------------------")
+                from manuel_mode import pandas_html
+                html = pandas_html.get_html(df_ans)
+                pywebio.output.popup("继续", [
+                    pywebio.output.put_text("高级模式已启动")
+                ])
+
+                pywebio.output.clear()
+                pywebio.output.put_text("刷新以输入新的查询")
+                pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
+                break
+
+            if selected_action == 'c':
+                continue
+
 
 if __name__ == "__main__":
     pywebio.start_server(main,
