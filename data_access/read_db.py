@@ -46,7 +46,7 @@ def get_data_from_db():
                 common_columns = set(table_df1.columns).intersection(set(table_df2.columns))
                 if common_columns:
                     # 如果有公共列，则进行等值连接
-                    merged_df = pd.merge(table_df1, table_df2, on=list(common_columns))
+                    merged_df = pd.merge(table_df1, table_df2, on=list(common_columns), how='outer')
                     # 创建新表名，并确保表名按字母顺序排序
                     sorted_table_names = sorted([table_name1, table_name2])
                     merged_table_name = "_".join(sorted_table_names)
