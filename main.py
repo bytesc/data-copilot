@@ -34,6 +34,7 @@ def main():
     # ans = lake.chat('查询Liam 的工资')
 
     while 1:
+        tries = 0
         while 1:
             pywebio.output.popup("数据查询中", [
                 pywebio.output.put_text(question),
@@ -50,7 +51,7 @@ def main():
                                               "save_charts_path": "./tmp_imgs/",
                                               "open_charts": False,
                                               "enable_cache": False,
-                                              "max_retries": 8})
+                                              "max_retries": 3})
 
             img_ans = data_lake.chat(question + graph_type)
             print(img_ans, "\n--------------------------------")
@@ -65,8 +66,13 @@ def main():
                     # pywebio.output.put_text(img_ans),
                     pywebio.output.put_image(graph_img)
                 ])
+                tries = 0
                 break
             else:
+                if tries < 3:
+                    tries += 1
+                    print(tries, "##############")
+                    continue
                 pywebio.output.popup("失败", [
                     pywebio.output.put_text("画图失败"),
                     pywebio.output.put_text(img_ans),
@@ -83,43 +89,52 @@ def main():
 
         if selected_action == 'g':
             from manuel_mode import pandas_html
-            pywebio.output.popup("高级模式启动中", [
-                pywebio.output.put_text(question),
-                pywebio.output.put_loading(),
-            ])
-
-            data_lake = SmartDatalake(list_data + merged_list_data,
-                                      config={"llm": llm,
-                                              "save_charts": True,
-                                              "save_charts_path": "./tmp_imgs/",
-                                              "open_charts": False,
-                                              "enable_cache": False,
-                                              "max_retries": 8})
-            clean_data_pd = data_lake.chat(question + "!!!return single pandas dataframe only!!! "
-                                                      "not graph!!!"
-                                                      " not any other type!!! ")
-            print(clean_data_pd, "\n--------------------------------")
-
-            if not isinstance(clean_data_pd, pd.DataFrame):
-                # pywebio.output.popup("失败", [
-                #     pywebio.output.put_text("查询失败"),
-                #     pywebio.output.put_text(clean_data_pd),
-                # ])
-                clean_data_pd = None
-                # break
-
-            if clean_data_pd is not None:
-                tb_data = [clean_data_pd.columns.to_list()] + clean_data_pd.values.tolist()
-                print(tb_data)
-                pywebio.output.popup("高级模式启动成功", [
+            tries = 0
+            while 1:
+                pywebio.output.popup("高级模式启动中", [
                     pywebio.output.put_text(question),
-                    pywebio.output.put_table(tb_data),
+                    pywebio.output.put_loading(),
                 ])
-                pywebio.output.put_table(tb_data),
-            html = pandas_html.get_html(clean_data_pd)
-            pywebio.output.clear()
-            pywebio.output.put_text("高级模式 刷新以输入新的查询")
-            pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
+
+                data_lake = SmartDatalake(list_data + merged_list_data,
+                                          config={"llm": llm,
+                                                  "save_charts": True,
+                                                  "save_charts_path": "./tmp_imgs/",
+                                                  "open_charts": False,
+                                                  "enable_cache": False,
+                                                  "max_retries": 3})
+                clean_data_pd = data_lake.chat(question + "!!!return single pandas dataframe only!!! "
+                                                          "not graph!!!"
+                                                          " not any other type!!! ")
+                print(clean_data_pd, "\n--------------------------------")
+
+                if not isinstance(clean_data_pd, pd.DataFrame):
+                    # pywebio.output.popup("失败", [
+                    #     pywebio.output.put_text("查询失败"),
+                    #     pywebio.output.put_text(clean_data_pd),
+                    # ])
+                    clean_data_pd = None
+                    # break
+
+                html = ""
+                if clean_data_pd is not None:
+                    tb_data = [clean_data_pd.columns.to_list()] + clean_data_pd.values.tolist()
+                    print(tb_data)
+                    pywebio.output.popup("高级模式启动成功", [
+                        pywebio.output.put_text(question),
+                        pywebio.output.put_table(tb_data),
+                    ])
+                    pywebio.output.put_table(tb_data),
+                    html = pandas_html.get_html(clean_data_pd)
+                    pywebio.output.clear()
+                    pywebio.output.put_text("高级模式 刷新以输入新的查询")
+                    pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
+                    break
+                else:
+                    if tries < 3:
+                        tries += 1
+                        print(tries, "##############")
+                        continue
             break
 
         if selected_action == 'c':
