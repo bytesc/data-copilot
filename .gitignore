@@ -2,6 +2,8 @@
 __pycache__/
 
 *.log
-llm_access/api_key.txt
+llm_access/api_key_qwen.txt
+llm_access/api_key_glm.txt
 output_img/
 cache/
+exports/

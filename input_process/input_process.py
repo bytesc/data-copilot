@@ -1,12 +1,17 @@
-from llm_access.qwen_access import call_llm
+# from llm_access.qwen_access import call_llm
+from llm_access.glm_access import call_llm, llm
 
 
-def process_question(question):
-    ask = question + "Based on the task described, which is most suitable: bar chart, pie chart, line graph, or scatter plot?"\
-          +"If you are not sure, use bar chart. Please output only the chart names without any explaination. "
-    graph_type = call_llm(ask)
-    return question + "，please draw " + graph_type
+def get_chart_type(question):
+    ask = question + "Based on the task described, which is most suitable: " \
+                     "bar chart, pie chart, line graph, or scatter plot?" \
+                     "You can only choice one of them. "\
+                     "If you really not sure, you can choice a ramdom one, but do not suggest more than one" \
+                    "Please output only the chart names without any explanation. "
+
+    graph_type = call_llm(ask, llm)
+    return ", please draw " + graph_type
 
 
 if __name__ == "__main__":
-    print(process_question("几位同事的工资对比"))
+    print(get_chart_type("几位同事的工资对比"))

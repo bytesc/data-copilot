@@ -4,7 +4,8 @@ from pandasai import Agent, SmartDatalake
 import matplotlib.pyplot as plt
 
 import data_access.read_db
-from llm_access.qwen_access import llm
+# from llm_access.qwen_access import llm
+from llm_access.glm_access import llm
 from output_parsing import parse_img
 from input_process import input_process
 
@@ -25,13 +26,8 @@ def main():
     list_data = list(dict_data.values())
     pywebio.output.put_table([list(dict_data.keys())])
 
-    # from langchain_community.llms.tongyi import Tongyi
-    # model = "qwen-turbo"
-    # llm = Tongyi(dashscope_api_key="key",
-    #              model_name=model)
-
-    lake = SmartDatalake(list_data, config={"llm": llm,
-                                            "save_charts": True,
+    dirty_data_lake = SmartDatalake(list_data, config={"llm": llm,
+                                            "save_charts": False,
                                             "save_charts_path": "./tmp_imgs/",
                                             "open_charts": False,
                                             "enable_cache": False,
@@ -43,78 +39,79 @@ def main():
     # ans = lake.chat('查询Liam 的工资')
 
     while 1:
-
-        pywebio.output.popup("加载中", [
-            pywebio.output.put_loading(),
-        ])
-
-        processed_question = input_process.process_question(question)
-        print(processed_question)
-
-        ans = lake.chat(processed_question)
-        print(ans, "\n--------------------------------")
-
-        img_path = parse_img.parse_output_img(ans)
-        if img_path is not None:
-            # print("img_path:", img_path)
-            graph_img = PIL.Image.open(img_path)
-
-            pywebio.output.popup("结果", [
-                pywebio.output.put_text(ans),
-                pywebio.output.put_image(graph_img)
+        while 1:
+            pywebio.output.popup("数据查询中", [
+                pywebio.output.put_text("数据查询"),
+                pywebio.output.put_loading(),
             ])
-        else:
-            pywebio.output.popup("结果", [
-                pywebio.output.put_text(ans),
-                pywebio.output.put_text("画图失败"),
+
+            graph_type = input_process.get_chart_type(question)
+            print(question, graph_type, "\n--------------------------------")
+
+            clean_data_pd = dirty_data_lake.chat(question + "return single pandas dataframe only!!! do not draw chart!!")
+            print(clean_data_pd, "\n--------------------------------")
+
+            if not isinstance(clean_data_pd, pd.DataFrame):
+                pywebio.output.popup("失败", [
+                    pywebio.output.put_text("查询失败"),
+                    pywebio.output.put_text(clean_data_pd),
+                ])
+                clean_data_pd = None
+                break
+
+            pywebio.output.popup("画图中", [
+                pywebio.output.put_text("数据查询成功"),
+                pywebio.output.put_text("画图中"),
+                pywebio.output.put_loading(),
             ])
+
+            clean_data_lake = SmartDatalake([clean_data_pd], config={"llm": llm,
+                                                     "save_charts": True,
+                                                     "save_charts_path": "./tmp_imgs/",
+                                                     "open_charts": False,
+                                                     "enable_cache": False,
+                                                     "max_retries": 5})
+
+            img_ans = clean_data_lake.chat(graph_type)
+            print(img_ans , "\n--------------------------------")
+
+            img_path = parse_img.parse_output_img(img_ans)
+            if img_path is not None:
+                # print("img_path:", img_path)
+                graph_img = PIL.Image.open(img_path)
+
+                pywebio.output.popup("结果", [
+                    pywebio.output.put_text(img_ans),
+                    pywebio.output.put_image(graph_img)
+                ])
+                break
+            else:
+                pywebio.output.popup("失败", [
+                    pywebio.output.put_text("画图失败"),
+                    pywebio.output.put_text(img_ans),
+                ])
+                break
 
         # 定义两个按钮的操作
         actions = [
-            {'label': '满意', 'value': 'y'},
-            {'label': '不满意', 'value': 'n'}
+            {'label': '重新查询', 'value': 'c'},
+            {'label': '高级模式', 'value': 'g'}
         ]
         # 显示按钮并获取用户点击的结果
-        selected_action = pywebio.input.actions('是否对结果满意', actions)
-        # 根据用户的选择输出不同的信息
-        if selected_action == 'y':
-            pywebio.output.put_text("刷新以输入新的查询")
-            pywebio.session.set_env()
+        selected_action = pywebio.input.actions('接下来', actions)
+
+        if selected_action == 'g':
+            from manuel_mode import pandas_html
+            html = pandas_html.get_html(clean_data_pd)
+            pywebio.output.clear()
+            pywebio.output.put_text("高级模式 刷新以输入新的查询")
+            pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
             break
-        if selected_action == 'n':
-            # 定义两个按钮的操作
-            actions = [
-                {'label': '重新查询', 'value': 'c'},
-                {'label': '高级模式', 'value': 'g'}
-            ]
-            # 显示按钮并获取用户点击的结果
-            selected_action = pywebio.input.actions('接下来', actions)
 
-            if selected_action == 'g':
-                pywebio.output.popup("高级模式加载中", [
-                    pywebio.output.put_loading(),
-                ])
-                lake = SmartDatalake(list_data, config={"llm": llm,
-                                                        "save_charts": True,
-                                                        "save_charts_path": "./tmp_imgs/",
-                                                        "open_charts": False,
-                                                        "enable_cache": False,
-                                                        "max_retries": 5})
-                df_ans = lake.chat(question + "return pandas dataframe only")
-                print(df_ans, "\n--------------------------------")
-                from manuel_mode import pandas_html
-                html = pandas_html.get_html(df_ans)
-                pywebio.output.popup("继续", [
-                    pywebio.output.put_text("高级模式已启动")
-                ])
-
-                pywebio.output.clear()
-                pywebio.output.put_text("刷新以输入新的查询")
-                pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
-                break
-
-            if selected_action == 'c':
-                continue
+        if selected_action == 'c':
+            continue
+        else:
+            break
 
 
 if __name__ == "__main__":

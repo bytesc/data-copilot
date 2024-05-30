@@ -5,6 +5,7 @@ from langchain.prompts import PromptTemplate
 # pip install dashscope
 
 from llm_access import get_api
+from llm_access.call_llm_test import call_llm
 
 model = "qwen-turbo"
 llm = Tongyi(dashscope_api_key=get_api.get_api_key_from_file(),
@@ -22,13 +23,5 @@ llm = Tongyi(dashscope_api_key=get_api.get_api_key_from_file(),
 # llm = HuggingFacePipeline(pipeline=pipe)
 
 
-def call_llm(question):
-    prompt = PromptTemplate(template="{question}", input_variables=["question"])
-    llm_chain = LLMChain(prompt=prompt, llm=llm)
-    ans = llm_chain.invoke(question)
-    return ans["text"]
-
-
 if __name__ == "__main__":
-
-    print(call_llm("你好"))
+    print(call_llm("你好", llm))

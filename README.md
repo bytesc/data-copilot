@@ -14,6 +14,10 @@
 
 [阿里云dashscope](https://dashscope.console.aliyun.com/)
 
-保存 `api-key` 到 `llm_access/api_key.txt`
+保存 `api-key` 到 `llm_access/api_key_qwen.txt`
 
+从智谱 AI 获取 `chatglm` 大语言模型的 api-key
 
+[chatglm智谱AI](https://open.bigmodel.cn/)
+
+保存 `api-key` 到 `llm_access/api_key_glm.txt`
