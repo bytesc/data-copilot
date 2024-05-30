@@ -58,19 +58,24 @@ def get_data_from_db():
                     merged_table_names.add(table_name1)
                     merged_table_names.add(table_name2)
 
-    # 添加没有被合并的原始表到结果字典
-    for table_name, table_df in tables_data.items():
-        if table_name not in merged_table_names:
-            merged_tables_data[table_name] = table_df
+    # # 添加没有被合并的原始表到结果字典
+    # for table_name, table_df in tables_data.items():
+    #     if table_name not in merged_table_names:
+    #         merged_tables_data[table_name] = table_df
 
-    return merged_tables_data
+    return tables_data, merged_tables_data
 
 
 if __name__ == "__main__":
-    data = get_data_from_db()
-    print(type(data), "\n")
+    data, mdata = get_data_from_db()
+    print(type(data),type(mdata), "\n")
     for table_name, table_df in data.items():
         print(f"Table: {table_name}")
         print(table_df)
         print(type(table_df))
-        print("###########################################\n\n")
+    print("###########################################\n\n")
+    for table_name, table_df in mdata.items():
+        print(f"Table: {table_name}")
+        print(table_df)
+        print(type(table_df))
+

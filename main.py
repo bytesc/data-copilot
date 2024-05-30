@@ -4,34 +4,35 @@ from pandasai import Agent, SmartDatalake
 import matplotlib.pyplot as plt
 
 import data_access.read_db
-# from llm_access.qwen_access import llm
-from llm_access.glm_access import llm
+
+from llm_access.LLM import llm
+from llm_access.qwen_access import llm as qwen
+from llm_access.glm_access import llm as glm
 from output_parsing import parse_img
 from input_process import input_process
 
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
-plt.ioff()
 
 import pywebio
 
 
 def main():
-
     pywebio.output.put_markdown("# Data Copilot")
     pywebio.output.put_markdown("## 自然语言数据库查询")
 
-    dict_data = data_access.read_db.get_data_from_db()
+    dict_data, merged_dict_data = data_access.read_db.get_data_from_db()
     list_data = list(dict_data.values())
+    merged_list_data = list(merged_dict_data.values())
     pywebio.output.put_table([list(dict_data.keys())])
 
-    dirty_data_lake = SmartDatalake(list_data, config={"llm": llm,
-                                            "save_charts": False,
-                                            "save_charts_path": "./tmp_imgs/",
-                                            "open_charts": False,
-                                            "enable_cache": False,
-                                            "max_retries": 5})
+    dirty_data_lake = SmartDatalake(list_data + merged_list_data, config={"llm": llm,
+                                                                          "save_charts": True,
+                                                                          "save_charts_path": "./tmp_imgs/",
+                                                                          "open_charts": False,
+                                                                          "enable_cache": False,
+                                                                          "max_retries": 3})
 
     # 获取用户输入
     question = pywebio.input.input("请输入你的问题")
@@ -50,34 +51,37 @@ def main():
             graph_type = input_process.get_chart_type(question)
             print(question, graph_type, "\n--------------------------------")
 
-            clean_data_pd = dirty_data_lake.chat(question + "!!!return single pandas dataframe only!!! ")
+            clean_data_pd = dirty_data_lake.chat(question + "!!!return single pandas dataframe only!!! not graph!!!"
+                                                            " not any other type!!! ")
             print(clean_data_pd, "\n--------------------------------")
 
             if not isinstance(clean_data_pd, pd.DataFrame):
-                pywebio.output.popup("失败", [
-                    pywebio.output.put_text("查询失败"),
-                    pywebio.output.put_text(clean_data_pd),
-                ])
+                # pywebio.output.popup("失败", [
+                #     pywebio.output.put_text("查询失败"),
+                #     pywebio.output.put_text(clean_data_pd),
+                # ])
                 clean_data_pd = None
-                break
+                # break
 
-            tb_data = [clean_data_pd.columns.to_list()] + clean_data_pd.values.tolist()
-            print(tb_data)
-            pywebio.output.popup("画图中", [
-                pywebio.output.put_text(question),
-                pywebio.output.put_text("数据查询成功"),
-                pywebio.output.put_text("画图中"),
-                pywebio.output.put_loading(),
+            if clean_data_pd is not None:
+                tb_data = [clean_data_pd.columns.to_list()] + clean_data_pd.values.tolist()
+                print(tb_data)
+                pywebio.output.popup("画图中", [
+                    pywebio.output.put_text(question),
+                    pywebio.output.put_text("数据查询成功"),
+                    pywebio.output.put_text("画图中"),
+                    pywebio.output.put_loading(),
+                    pywebio.output.put_table(tb_data),
+                ])
                 pywebio.output.put_table(tb_data),
-            ])
-            pywebio.output.put_table(tb_data),
 
-            clean_data_lake = SmartDatalake([clean_data_pd], config={"llm": llm,
-                                                     "save_charts": True,
-                                                     "save_charts_path": "./tmp_imgs/",
-                                                     "open_charts": False,
-                                                     "enable_cache": False,
-                                                     "max_retries": 5})
+            clean_data_lake = SmartDatalake(list_data + merged_list_data,
+                                            config={"llm": llm,
+                                                    "save_charts": True,
+                                                    "save_charts_path": "./tmp_imgs/",
+                                                    "open_charts": False,
+                                                    "enable_cache": False,
+                                                    "max_retries": 3})
 
             img_ans = clean_data_lake.chat(question + graph_type)
             print(img_ans, "\n--------------------------------")
@@ -101,6 +105,7 @@ def main():
                 ])
                 break
 
+        pywebio.output.put_text("刷新以输入新的查询")
         # 定义两个按钮的操作
         actions = [
             {'label': '重新查询', 'value': 'c'},

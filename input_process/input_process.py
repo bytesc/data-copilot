@@ -1,5 +1,5 @@
-# from llm_access.qwen_access import call_llm
-from llm_access.glm_access import call_llm, llm
+from llm_access.LLM import llm
+from llm_access.call_llm_test import call_llm
 
 
 def get_chart_type(question):
