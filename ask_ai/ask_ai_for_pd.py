@@ -11,7 +11,7 @@ from ask_ai import ask_api
 
 
 def ask_pd(data, question):
-    tries = 0
+    tries = 1
     while 1:
         pywebio.output.popup("高级模式启动中", [
             pywebio.output.put_text(question),
@@ -20,7 +20,7 @@ def ask_pd(data, question):
         clean_data_pd_list = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = [executor.submit(ask_api.ask, data,
-                                       question, llm, False) for _ in range(config_data['ai']['concurrent'])]
+                                       question, llm, False) for _ in range(tries*config_data['ai']['concurrent'])]
             for future in concurrent.futures.as_completed(futures):
                 result = future.result()
                 print(result, "\n--------------------------------")
@@ -44,7 +44,7 @@ def ask_pd(data, question):
             pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
             break
         else:
-            if tries < 3:
+            if tries <= config_data['ai']['tries']:
                 tries += 1
                 print(tries, "##############")
                 continue
