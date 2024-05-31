@@ -1,32 +1,24 @@
 import pandas as pd
-import pymysql
+from sqlalchemy import text
+
+from data_access.db_conn import engine
 
 
 def get_data_from_db():
+    with engine.connect() as connection:
+        query = text("SHOW TABLES")
+        tables = connection.execute(query).fetchall()
 
-    connection = pymysql.connect(host='localhost',
-                                 user='root',
-                                 password='123456',
-                                 database='data_copilot')
-    # 创建一个cursor对象
-    cursor = connection.cursor()
+        # 准备一个字典来存储所有表的DataFrame
+        tables_data = {}
 
-    # 执行SHOW TABLES命令获取所有表名
-    cursor.execute("SHOW TABLES")
-    tables = cursor.fetchall()
+        # 遍历所有表名
+        for table_name in tables:
+            table_name = table_name[0]  # 表名是一个元组，取第一个元素
+            query = text(f"SELECT * FROM {table_name}")  # 构造查询语句
+            tables_data[table_name] = pd.read_sql(query, connection)  # 读取表内容到DataFrame
 
-    # 准备一个字典来存储所有表的DataFrame
-    tables_data = {}
-
-    # 遍历所有表名
-    for table_name in tables:
-        table_name = table_name[0]  # 表名是一个元组，取第一个元素
-        query = f"SELECT * FROM {table_name}"  # 构造查询语句
-        tables_data[table_name] = pd.read_sql(query, connection)  # 读取表内容到DataFrame
-
-    # 关闭cursor和连接
-    cursor.close()
-    connection.close()
+        connection.close()
 
     # 打印每个表的内容
     # for table_name, table_df in tables_data.items():

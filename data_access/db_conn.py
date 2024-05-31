@@ -1,5 +1,3 @@
-import pymysql
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='123456',
-                             database='data_copilot')
+from sqlalchemy import create_engine
+engine = create_engine('mysql+pymysql://root:123456@localhost/data_copilot')
+
