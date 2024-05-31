@@ -1,5 +1,7 @@
 
 from langchain.prompts import PromptTemplate
+
+from config.get_config import config_data
 from llm_access import get_api
 
 from langchain_openai import ChatOpenAI
@@ -9,9 +11,9 @@ from llm_access.call_llm_test import call_llm
 
 llm = ChatOpenAI(
     temperature=0.95,
-    model="glm-4",
-    openai_api_key=get_api.get_api_key_from_file("./llm_access/api_key_glm.txt"),
-    openai_api_base="https://open.bigmodel.cn/api/paas/v4/"
+    model=config_data['llm']['model'],
+    openai_api_key=get_api.get_api_key_from_file("./llm_access/api_key_openai.txt"),
+    openai_api_base=config_data['llm']['url'],
 )
 
 
