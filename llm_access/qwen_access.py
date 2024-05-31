@@ -7,9 +7,11 @@ from langchain.prompts import PromptTemplate
 from llm_access import get_api
 from llm_access.call_llm_test import call_llm
 
-model = "qwen-turbo"
+from config.get_config import config_data
+
+
 llm = Tongyi(dashscope_api_key=get_api.get_api_key_from_file(),
-             model_name=model)
+             model_name=config_data['llm']['model'])
 
 # path = r'D:\IDLE\big\qwen\models\Qwen-1_8B-Chat'
 # from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline

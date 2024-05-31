@@ -5,4 +5,11 @@ ai:
   retries: 2
   concurrent: 3
 
+llm:
+  model: qwen-max
+  url: "https://open.bigmodel.cn/api/paas/v4/"
+
+# qwen1.5-72b-chat   qwen1.5-110b-chat
+# qwen-turbo  qwen-plus   qwen-max   qwen-long
+
 server_port: 8087
