@@ -109,7 +109,9 @@ llm = llm_access.openai_access.llm
 # llm = llm_access.qwen_access.llm
 ```
 
-#### 获取apikey
+如果需要本地离线部署，相关代码在 `./llm_access/qwen_access.py`
+
+#### 获取 apikey
 
 如果从[阿里云 dashscope ](https://dashscope.console.aliyun.com/)获取 `qwen` 大语言模型的 api-key
 
