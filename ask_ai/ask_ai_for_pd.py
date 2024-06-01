@@ -32,27 +32,27 @@ def ask_pd(data, question):
                     if len(clean_data_pd_list) >= 1:
                         break
 
-        if len(clean_data_pd_list) != 0:
-            clean_data_pd = clean_data_pd_list[0]
-            tb_data = [clean_data_pd.columns.to_list()] + clean_data_pd.values.tolist()
-            print(tb_data)
-            pywebio.output.popup("高级模式启动成功", [
-                pywebio.output.put_text(question),
-                pywebio.output.put_table(tb_data),
-            ])
-            pywebio.output.put_table(tb_data),
-            html = pandas_html.get_html(clean_data_pd)
-            pywebio.output.clear()
-            pywebio.output.put_text("高级模式 刷新以输入新的查询")
-            pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
-            break
-        else:
-            if tries <= config_data['ai']['tries']:
-                tries += 1
-                print(tries, "##############")
-                continue
-            else:
-                pywebio.output.popup("失败", [
-                    pywebio.output.put_text("查询失败"),
+            if len(clean_data_pd_list) != 0:
+                clean_data_pd = clean_data_pd_list[0]
+                tb_data = [clean_data_pd.columns.to_list()] + clean_data_pd.values.tolist()
+                print(tb_data)
+                pywebio.output.popup("高级模式启动成功", [
+                    pywebio.output.put_text(question),
+                    pywebio.output.put_table(tb_data),
                 ])
+                pywebio.output.put_table(tb_data),
+                html = pandas_html.get_html(clean_data_pd)
+                pywebio.output.clear()
+                pywebio.output.put_text("高级模式 刷新以输入新的查询")
+                pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
                 break
+            else:
+                if tries <= config_data['ai']['tries']:
+                    tries += 1
+                    print(tries, "##############")
+                    continue
+                else:
+                    pywebio.output.popup("失败", [
+                        pywebio.output.put_text("查询失败"),
+                    ])
+                    break

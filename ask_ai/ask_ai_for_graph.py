@@ -32,26 +32,26 @@ def ask_graph(data, question):
                     if len(result_list) >= tries * config_data['ai']['wait']:
                         break
 
-        if len(result_list) != 0:
-            # print("img_path:", img_path)
-            graph_img = PIL.Image.open(result_list[0])
+            if len(result_list) != 0:
+                # print("img_path:", img_path)
+                graph_img = PIL.Image.open(result_list[0])
 
-            pywebio.output.popup("画图完成", [
-                pywebio.output.put_text("画图成功"),
-                # pywebio.output.put_text(img_ans),
-                pywebio.output.put_image(graph_img)
-            ])
-            for path in result_list:
-                graph_img = PIL.Image.open(path)
-                pywebio.output.put_image(graph_img)
-            break
-        else:
-            if tries <= config_data['ai']['tries']:
-                tries += 1
-                print(tries, "##############")
-                continue
-            pywebio.output.popup("失败", [
-                pywebio.output.put_text("画图失败"),
-                # pywebio.output.put_text(img_ans),
-            ])
-            break
+                pywebio.output.popup("画图完成", [
+                    pywebio.output.put_text("画图成功"),
+                    # pywebio.output.put_text(img_ans),
+                    pywebio.output.put_image(graph_img)
+                ])
+                for path in result_list:
+                    graph_img = PIL.Image.open(path)
+                    pywebio.output.put_image(graph_img)
+                break
+            else:
+                if tries <= config_data['ai']['tries']:
+                    tries += 1
+                    print(tries, "##############")
+                    continue
+                pywebio.output.popup("失败", [
+                    pywebio.output.put_text("画图失败"),
+                    # pywebio.output.put_text(img_ans),
+                ])
+                break
