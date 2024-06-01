@@ -5,7 +5,7 @@
 
 通过自然语言提问，使用大语言模型智能解析数据库结构，对数据进行智能多表结构化查询和统计计算，根据查询结果智能绘制多种图表。 Pywebio 交互式前端网页，不必须 openai api，100%纯 Python 代码。 
 
-🚩[简体中文文档](./README.md)
+🚩[English Readme](./README.en.md)
 
 [个人网站：www.bytesc.top](http://www.bytesc.top) 
 

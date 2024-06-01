@@ -4,7 +4,7 @@
 
 Utilizing natural language queries, this system intelligently parses database structures using large language models, enabling intelligent multi-table structured queries and statistical computations on data. It also smartly generates various charts based on query results. Implemented with Pywebio interactive frontend web pages, without the need for OpenAI API, it's 100% pure Python code.
 
-🚩[English Readme](./README.en.md)
+🚩[简体中文文档](./README.md)
 
 [Personal website: www.bytesc.top](http://www.bytesc.top)
 
