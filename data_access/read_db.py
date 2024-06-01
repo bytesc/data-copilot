@@ -55,7 +55,8 @@ def get_data_from_db():
     #     if table_name not in merged_table_names:
     #         merged_tables_data[table_name] = table_df
 
-    return tables_data, merged_tables_data
+    # return tables_data, merged_tables_data
+    return tables_data, {}
 
 
 if __name__ == "__main__":
