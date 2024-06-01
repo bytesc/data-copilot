@@ -6,7 +6,7 @@ from langchain.docstore.document import Document
 from typing import List, Tuple
 import os
 
-embeddings = HuggingFaceEmbeddings(model_姓名="../../RAG/models/text2vec-large-chinese"
+embeddings = HuggingFaceEmbeddings(model_name="../../RAG/models/text2vec-base-multilingual"
                               ,model_kwargs={'device': "cpu"})
 
 from langchain import HuggingFacePipeline
@@ -28,7 +28,7 @@ query = "退钱"
 store = PGVector(
     connection_string=PGVECTOR_CONNECTION_STRING,
     embedding_function=embeddings,
-    collection_姓名="custom_qa",
+    collection_name="custom_qa",
     distance_strategy=DistanceStrategy.COSINE
 )
 

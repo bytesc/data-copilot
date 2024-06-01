@@ -1,6 +1,6 @@
 CREATE TABLE "public"."langchain_pg_collection" (
 	"uuid" uuid NOT NULL,
-	"姓名" varchar,
+	"name" varchar,
 	"cmetadata" json,
 	CONSTRAINT "langchain_pg_collection_pkey" PRIMARY KEY ("uuid")
 );

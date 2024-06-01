@@ -134,6 +134,49 @@ python main.py
 
 ## 基本技术原理
 
+
+### 未来可能的方向
+
+本项目的难点在于：实现由**用户自然语言的模糊提问**和**大语言模型输出的自然语言回答**，到传统非人工智能计算机代码可以处理的**确定数据**的映射。
+
+本项目目前阶段和其它一些开源实现(例如`langchain agent`)使用的方法。
+都是**反复提问**以得到大语言模型，以得到尽可能符合预定格式的自然语言回答，然后使用**正则表达式**匹配数据。
+
+大语言模型虽然有很高的灵活度，可以实现多种复杂的智能数据库查询、统计、绘图功能。
+但是其有输入输出规模的致命瓶颈，无法直接处理超长文本或大规模数据集。
+因此，在面对大规模数据（例如上百张表）的结构信息时，可能表现不佳。
+
+大语言模型虽然可以一定程度上通过 `prompt` 控制相对确定的输出格式。
+但是其本质仍然是自然语言输出，依然具有大语言模型不稳定的输出特征以及涌现问题。
+无法保证返回可以接受的结果，无法保证结果的合理性，准确性。
+
+所以在这一方面的创新，可能是本项目未来可能的发展方向。
+
+#### 向量数据库和词嵌入模型
+
+引入词嵌入模型(例如 `text2vec-base-multilingual`)和 向量数据库 (例如 `PGVector`) 可以更好地处理大规模数据。
+
+通过将大规模数据分条转换为向量，将词汇映射到低维向量空间中，从而捕捉词汇之间的**语义关系**。
+并将其存储在向量数据库中，我们可以快速地进行**相似性查询**、聚类等操作，从而实现对大规模数据的有效处理。 
+同时，向量数据库中只能匹配到语义上最接近的确定的预存结果，不会出现大语言模型的不稳定情况和涌现问题。
+
+向量数据库和词嵌入模型的加入，可以帮助克服大语言模型表现的不稳定性，以及在处理大规模数据时的限制。
+把向量数据库的稳定可靠，和大语言模型的智能灵活结合起来，从而实现对大规模数据的有效而稳定的处理和分析。
+
+相关技术储备代码在 `./pgv/` 文件夹下
+
+#### 相关链接
+
+词嵌入模型:
+
+`text2vec-large-chinese` [huggingface](https://huggingface.co/GanymedeNil/text2vec-large-chinese) [hf-mirror](https://hf-mirror.com/GanymedeNil/text2vec-large-chinese)
+
+`text2vec-base-multilingual` [huggingface](https://huggingface.co/shibing624/text2vec-base-multilingual) [hf-mirror](https://hf-mirror.com/shibing624/text2vec-base-multilingual)
+
+向量数据库:
+
+`PGVector` [Docker](https://hub.docker.com/r/ankane/pgvector) [Docker](https://hub.docker.com/r/pgvector/pgvector)
+
 未完待续......
 
 

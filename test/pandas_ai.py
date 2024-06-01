@@ -22,7 +22,7 @@ from langchain_community.llms.tongyi import Tongyi
 model = "qwen-turbo"
 
 llm = Tongyi(dashscope_api_key="key",
-             model_姓名=model)
+             model_name=model)
 
 # df = SmartDataframe(sales_by_country, config={"llm": llm})
 #
