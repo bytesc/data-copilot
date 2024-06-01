@@ -2,8 +2,9 @@ mysql: mysql+pymysql://root:123456@127.0.0.1/data_copilot
 
 ai:
   tries: 3
-  retries: 2
+  retries: 3
   concurrent: 3
+  wait: 2
 
 llm:
   model: qwen1.5-110b-chat

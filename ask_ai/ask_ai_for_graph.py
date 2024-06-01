@@ -22,12 +22,15 @@ def ask_graph(data, question):
         result_list = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = [executor.submit(ask_api.ask, data,
-                                       question, llm, True) for _ in range(tries*config_data['ai']['concurrent'])]
+                                       question, llm, True) for _ in range(tries * config_data['ai']['concurrent'])]
             for future in concurrent.futures.as_completed(futures):
                 result = future.result()
                 img_path = parse_img.parse_output_img(result)
                 if img_path is not None:
                     result_list.append(img_path)
+                    print(img_path, "\n*************************")
+                    if len(result_list) >= tries * config_data['ai']['wait']:
+                        break
 
         if len(result_list) != 0:
             # print("img_path:", img_path)

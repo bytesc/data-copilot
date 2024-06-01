@@ -28,6 +28,9 @@ def ask_pd(data, question):
                     result = None
                 if result is not None:
                     clean_data_pd_list.append(result)
+                    print(result, "\n*************************")
+                    if len(clean_data_pd_list) >= 1:
+                        break
 
         if len(clean_data_pd_list) != 0:
             clean_data_pd = clean_data_pd_list[0]
