@@ -26,7 +26,11 @@ def main():
     pywebio.output.put_text(question)
 
     while 1:
-        ask_ai_for_graph.ask_graph(list_data + merged_list_data, question)
+        try:
+            ask_ai_for_graph.ask_graph(list_data + merged_list_data, question)
+        except Exception as e:
+            print(e)
+            break
 
         # 定义两个按钮的操作
         actions = [
@@ -37,7 +41,10 @@ def main():
         selected_action = pywebio.input.actions('刷新以输入新的查询', actions)
 
         if selected_action == 'g':
-            ask_ai_for_pd.ask_pd(list_data + merged_list_data, question)
+            try:
+                ask_ai_for_pd.ask_pd(list_data + merged_list_data, question)
+            except Exception as e:
+                print(e)
             break
 
         elif selected_action == 'c':
