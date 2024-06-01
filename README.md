@@ -30,7 +30,7 @@
 
 并发生成控制。
 
-![](./readme_img/t3png)
+![](./readme_img/t3.png)
 
 ## 展示
 
@@ -186,7 +186,7 @@ python main.py
 
 向量数据库:
 
-`PGVector` [Docker](https://hub.docker.com/r/ankane/pgvector) [Docker](https://hub.docker.com/r/pgvector/pgvector)
+`PGVector` [DockerHub](https://hub.docker.com/r/ankane/pgvector) [dockerproxy](https://dockerproxy.com/docs)
 
 未完待续......
 
