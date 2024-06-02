@@ -23,9 +23,9 @@ def main():
     pywebio.output.put_table([list(dict_data.keys())])
 
     actions = [
-        {'label': '查看所有数据', 'value': 'show'},
+        {'label': '所有数据', 'value': 'show'},
         {'label': '智能查询', 'value': 'query'},
-        {'label': '智能查询并绘图', 'value': 'graph'},
+        {'label': '智能绘图', 'value': 'graph'},
     ]
     # 显示按钮并获取用户点击的结果
     selected_action = pywebio.input.actions('选项', actions)

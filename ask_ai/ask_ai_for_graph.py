@@ -28,19 +28,19 @@ def ask_graph(data, question):
                 img_path = parse_img.parse_output_img(result)
                 if img_path is not None:
                     result_list.append(img_path)
+                    if len(result_list) == 1:
+                        graph_img = PIL.Image.open(result_list[0])
+                        pywebio.output.popup("画图完成", [
+                            pywebio.output.put_text("画图成功"),
+                            # pywebio.output.put_text(img_ans),
+                            pywebio.output.put_image(graph_img)
+                        ])
                     print(img_path, "\n*************************")
                     if len(result_list) >= config_data['ai']['wait']:
                         break
 
             if len(result_list) != 0:
                 # print("img_path:", img_path)
-                graph_img = PIL.Image.open(result_list[0])
-
-                pywebio.output.popup("画图完成", [
-                    pywebio.output.put_text("画图成功"),
-                    # pywebio.output.put_text(img_ans),
-                    pywebio.output.put_image(graph_img)
-                ])
                 for path in result_list:
                     graph_img = PIL.Image.open(path)
                     pywebio.output.put_image(graph_img)
