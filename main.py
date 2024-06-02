@@ -23,45 +23,47 @@ def main():
     pywebio.output.put_table([list(dict_data.keys())])
 
     actions = [
-        {'label': '查看所有数据', 'value': 's'},
-        {'label': '智能查询', 'value': 'z'}
+        {'label': '查看所有数据', 'value': 'show'},
+        {'label': '智能查询', 'value': 'query'},
+        {'label': '智能查询并绘图', 'value': 'graph'},
     ]
     # 显示按钮并获取用户点击的结果
     selected_action = pywebio.input.actions('选项', actions)
 
-    if selected_action == 's':
+    if selected_action == 'show':
         html = pandas_html.get_html(pd.concat(dict_data.values(), axis=1))
         pywebio.output.clear()
         pywebio.output.put_text("刷新以输入新的查询")
         pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
 
-    if selected_action == 'z':
+    if selected_action == 'graph' or selected_action == 'query':
         # 获取用户输入
         question = pywebio.input.input("请输入你的问题")
         pywebio.output.put_text(question)
 
         while 1:
-            try:
-                ask_ai_for_graph.ask_graph(list_data + merged_list_data, question)
-            except Exception as e:
-                print(e)
+            if selected_action == 'graph' or selected_action == 'graph_again':
+                try:
+                    ask_ai_for_graph.ask_graph(list_data + merged_list_data, question)
+                except Exception as e:
+                    print(e)
 
-            # 定义两个按钮的操作
-            actions = [
-                {'label': '重新查询', 'value': 'c'},
-                {'label': '高级模式', 'value': 'g'}
-            ]
-            # 显示按钮并获取用户点击的结果
-            selected_action = pywebio.input.actions('刷新以输入新的查询', actions)
+                # 定义两个按钮的操作
+                actions = [
+                    {'label': '重新查询', 'value': 'graph_again'},
+                    {'label': '高级模式', 'value': 'query'}
+                ]
+                # 显示按钮并获取用户点击的结果
+                selected_action = pywebio.input.actions('刷新以输入新的查询', actions)
 
-            if selected_action == 'g':
+            if selected_action == 'query':
                 try:
                     ask_ai_for_pd.ask_pd(list_data + merged_list_data, question)
                 except Exception as e:
                     print(e)
                 break
 
-            elif selected_action == 'c':
+            elif selected_action == 'graph_again':
                 continue
             else:
                 break
