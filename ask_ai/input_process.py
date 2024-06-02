@@ -10,15 +10,14 @@ charts = {
 
 chart_types = ", ".join(charts.keys())
 charts_string = str(charts)
-print(chart_types, charts)
+# print(chart_types, charts)
 
 
 def get_chart_type(question):
     graph_type = call_llm(question + "Based on the task described, which is most suitable: " +
                           chart_types + ". "
-                                        "You can only choice one of them. "
-                                        "If you really not sure, you can choice the first one, "
-                                        "but do not suggest more than one"
+                                        "You can only choice one of them without any explanation. "
+                                        "If you really not sure, return Bar Chart without any explanation, "
                                         "Please output only the chart type names without any explanation. " +
                           charts_string, llm)
     return ", please draw " + graph_type

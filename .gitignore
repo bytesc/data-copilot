@@ -7,3 +7,4 @@ llm_access/api_key_openai.txt
 output_img/
 cache/
 exports/
+tmp_imgs/*.png

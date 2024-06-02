@@ -6,6 +6,7 @@ from ask_ai import ask_ai_for_pd, ask_ai_for_graph
 import data_access.read_db
 
 from config.get_config import config_data
+from manuel_mode import pandas_html
 
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei']
@@ -21,36 +22,49 @@ def main():
     merged_list_data = list(merged_dict_data.values())
     pywebio.output.put_table([list(dict_data.keys())])
 
-    # 获取用户输入
-    question = pywebio.input.input("请输入你的问题")
-    pywebio.output.put_text(question)
+    actions = [
+        {'label': '查看所有数据', 'value': 's'},
+        {'label': '智能查询', 'value': 'z'}
+    ]
+    # 显示按钮并获取用户点击的结果
+    selected_action = pywebio.input.actions('选项', actions)
 
-    while 1:
-        try:
-            ask_ai_for_graph.ask_graph(list_data + merged_list_data, question)
-        except Exception as e:
-            print(e)
-            break
+    if selected_action == 's':
+        html = pandas_html.get_html(pd.concat(dict_data.values(), axis=1))
+        pywebio.output.clear()
+        pywebio.output.put_text("刷新以输入新的查询")
+        pywebio.output.put_html('<div style="position: absolute; left: 0; right: 0;"> ' + html + "</div>")
 
-        # 定义两个按钮的操作
-        actions = [
-            {'label': '重新查询', 'value': 'c'},
-            {'label': '高级模式', 'value': 'g'}
-        ]
-        # 显示按钮并获取用户点击的结果
-        selected_action = pywebio.input.actions('刷新以输入新的查询', actions)
+    if selected_action == 'z':
+        # 获取用户输入
+        question = pywebio.input.input("请输入你的问题")
+        pywebio.output.put_text(question)
 
-        if selected_action == 'g':
+        while 1:
             try:
-                ask_ai_for_pd.ask_pd(list_data + merged_list_data, question)
+                ask_ai_for_graph.ask_graph(list_data + merged_list_data, question)
             except Exception as e:
                 print(e)
-            break
 
-        elif selected_action == 'c':
-            continue
-        else:
-            break
+            # 定义两个按钮的操作
+            actions = [
+                {'label': '重新查询', 'value': 'c'},
+                {'label': '高级模式', 'value': 'g'}
+            ]
+            # 显示按钮并获取用户点击的结果
+            selected_action = pywebio.input.actions('刷新以输入新的查询', actions)
+
+            if selected_action == 'g':
+                try:
+                    ask_ai_for_pd.ask_pd(list_data + merged_list_data, question)
+                except Exception as e:
+                    print(e)
+                break
+
+            elif selected_action == 'c':
+                continue
+            else:
+                break
 
 
 if __name__ == "__main__":
