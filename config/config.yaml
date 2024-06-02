@@ -1,4 +1,5 @@
 mysql: mysql+pymysql://root:123456@127.0.0.1/data_copilot
+# classicmodels data_copilot
 
 ai:
   tries: 3
