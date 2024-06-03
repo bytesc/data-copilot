@@ -167,6 +167,8 @@ Thus, innovation in this area may be a possible future direction for this projec
 
 #### Vector Databases and Word Embedding Models
 
+![](./readme_img/t9.png)
+
 Introducing word embedding models (such as `text2vec-base-multilingual`) and vector databases (such as `PGVector`) can improve the handling of large-scale data.
 
 By transforming large-scale data into vectors on a per-item basis and mapping vocabulary into a lower-dimensional vector space, semantic relationships between words can be captured. By storing these vectors in a vector database, we can swiftly perform similarity queries, clustering, and other operations, facilitating effective processing of large-scale data.
