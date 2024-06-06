@@ -149,7 +149,7 @@ save the API key to `llm_access/api_key_openai.txt`.
 python main.py
 ```
 
-By default, you can access it via the browser at [http://192.168.71.51:8087/](http://192.168.71.51:8087/).
+By default, you can access it via the browser at [http://127.0.0.1:8087/](http://127.0.0.1:8087/).
 
 
 
