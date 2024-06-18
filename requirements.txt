@@ -1,13 +1,12 @@
 dashscope==1.15.0
-langchain-community==0.0.29
-langchain-core==0.2.2
-langchain-openai==0.1.8
 langchain==0.1.13
+langchain-community==0.0.29
+langchain-openai==0.1.8
 matplotlib==3.8.3
 numpy==1.26.4
 openai==1.30.4
-pandas==1.5.3
 pandasai==2.0.43
+pandas==1.5.3
 pillow==10.2.0
 pygwalker==0.4.8.7
 pywebio==1.8.3
