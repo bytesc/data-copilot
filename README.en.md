@@ -22,6 +22,14 @@ Utilizing natural language queries, this system intelligently parses database st
 - 7. Support for local offline deployment (GPU required) using Hugging Face format models (e.g., `qwen-7b`)
 - 8. Support for API interfaces in OpenAI format and Dashscope's `qwen`
 
+
+## Technological Innovations
+
+- Enable retrying of questions by feeding back information from exceptions and assertions, improving the stability of outputs from LLM.
+- Implement multi-threading for concurrent questioning to enhance response speed and stability.
+- Utilize DataFrame mapping in databases to avoid the risk of SQL injection attacks by manipulating the LLM through induced queries.
+- Introduce word embedding models and vector databases as a replacement for simple regular expressions, in order to address the challenge of mapping fuzzy outputs from LLM to specific system code executions.
+
 ## Basic Technical Principles
 
 Basic flow of single-instance generation:
