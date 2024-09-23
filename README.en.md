@@ -32,13 +32,28 @@ Utilizing natural language queries, this system intelligently parses database st
 
 ## Basic Technical Principles
 
-Basic flow of single-instance generation:
+### Basic flow of single-instance generation:
 
 ![Basic Flow](./readme_img/t1.png)
 
-Concurrency generation control:
+
+1. After the natural language question is input into the system, it will be combined with the pre-set tool set description information to form a prompt that is input into the LLM, allowing the LLM to select the appropriate tool to solve the problem.
+
+2. Retrieve the structural information of the data from the database (Dataframe data summary).
+
+3. Input the data summary and tool recommendation information into the LLM to write Python code to solve the problem.
+
+4. If there is an exception in the code execution, combine the exception information with the problematic code to form a new prompt and feed it back into the LLM to try again (go back to `3`). Repeat this process until the code runs successfully or exceeds the maximum number of retries.
+
+5. If the code does not encounter an exception, perform assertions on the program output. If the output is not of the expected type, combine the assertion information with the problematic code to form a new prompt and feed it back into the LLM to try again (go back to `3`). Repeat this process until the assertions are successful or exceed the maximum number of retries.
+
+### Concurrency generation control:
 
 ![Concurrency Control](./readme_img/t3.png)
+
+Repeated feedback of exceptions and assertions can cause the prompt to become increasingly long, causing the LLM to lose focus and affect the generation effect. The LLM's first incorrect response can also affect subsequent generations. Starting over may yield better results.
+
+Therefore, multi-threaded concurrent execution is introduced to ask questions independently multiple times, reducing the probability of overall generation failure caused by unstable LLM outputs, and improving system stability and response speed.
 
 ## Display
 
