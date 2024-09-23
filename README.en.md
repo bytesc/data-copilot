@@ -37,15 +37,21 @@ Utilizing natural language queries, this system intelligently parses database st
 ![Basic Flow](./readme_img/t1.png)
 
 
-1. After the natural language question is input into the system, it will be combined with the pre-set tool set description information to form a prompt that is input into the LLM, allowing the LLM to select the appropriate tool to solve the problem.
+
+1. After the natural language question is input into the system, it will be combined with the pre-set toolset description information to form a prompt and input into the LLM, allowing the LLM to select the appropriate tool for solving the problem.
 
 2. Retrieve the structural information of the data from the database (Dataframe data summary).
 
-3. Input the data summary and tool recommendation information into the LLM to write Python code to solve the problem.
+3. Input the data summary and tool suggestion information into the LLM to write Python code to solve the problem.
 
-4. If there is an exception in the code execution, combine the exception information with the problematic code to form a new prompt and feed it back into the LLM to try again (go back to `3`). Repeat this process until the code runs successfully or exceeds the maximum number of retries.
+4. Extract the code from the LLM's response and execute it with the Python interpreter.
 
-5. If the code does not encounter an exception, perform assertions on the program output. If the output is not of the expected type, combine the assertion information with the problematic code to form a new prompt and feed it back into the LLM to try again (go back to `3`). Repeat this process until the assertions are successful or exceed the maximum number of retries.
+5. If an exception occurs during code execution, combine the exception information with the problem code to form a new prompt and re-input it into the LLM for another attempt (return to step `3`). Continue until the code runs successfully or the maximum number of retries is exceeded.
+
+6. If no exception occurs during code execution, assert the program output. If it is not the expected type, combine the assertion information with the problem code to form a new prompt and re-input it into the LLM for another attempt (return to step `3`). Continue until the assertion is successful or the maximum number of retries is exceeded.
+
+7. Display the successful code execution output (charts) on the user interface and launch the interactive plotting interface based on the output data.
+
 
 ### Concurrency generation control:
 
