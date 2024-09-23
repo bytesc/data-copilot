@@ -32,11 +32,19 @@ Utilizing natural language queries, this system intelligently parses database st
 
 ## Basic Technical Principles
 
-### Basic flow of single-instance generation:
+### System Architecture
+
+![](./readme_img/sysarc.png)
+
+Users access the Web application through a browser, which communicates with the server using the WebSocket protocol via the Pywebio framework.
+
+The service layer uses LLM to generate code and tool suggestions, the Python interpreter to execute code, and Pygwalker to provide interactive plotting support.
+
+The data layer uses MySQL as the database.
+
+### Basic flow of single-instance generation
 
 ![Basic Flow](./readme_img/t1.png)
-
-
 
 1. After the natural language question is input into the system, it will be combined with the pre-set toolset description information to form a prompt and input into the LLM, allowing the LLM to select the appropriate tool for solving the problem.
 
@@ -53,7 +61,7 @@ Utilizing natural language queries, this system intelligently parses database st
 7. Display the successful code execution output (charts) on the user interface and launch the interactive plotting interface based on the output data.
 
 
-### Concurrency generation control:
+### Concurrency generation control
 
 ![Concurrency Control](./readme_img/t3.png)
 
