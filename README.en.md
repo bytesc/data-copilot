@@ -22,15 +22,52 @@ Utilizing natural language queries, this system intelligently parses database st
 - 7. Support for local offline deployment (GPU required) using Hugging Face format models (e.g., `qwen-7b`)
 - 8. Support for API interfaces in OpenAI format and Dashscope's `qwen`
 
+
+## Technological Innovations
+
+- Enable retrying of questions by feeding back information from exceptions and assertions, improving the stability of outputs from LLM.
+- Implement multi-threading for concurrent questioning to enhance response speed and stability.
+- Utilize DataFrame mapping in databases to avoid the risk of SQL injection attacks by manipulating the LLM through induced queries.
+- Introduce word embedding models and vector databases as a replacement for simple regular expressions, in order to address the challenge of mapping fuzzy outputs from LLM to specific system code executions.
+
 ## Basic Technical Principles
 
-Basic flow of single-instance generation:
+### System Architecture
+
+![](./readme_img/sysarc.png)
+
+Users access the Web application through a browser, which communicates with the server using the WebSocket protocol via the Pywebio framework.
+
+The service layer uses LLM to generate code and tool suggestions, the Python interpreter to execute code, and Pygwalker to provide interactive plotting support.
+
+The data layer uses MySQL as the database.
+
+### Basic flow of single-instance generation
 
 ![Basic Flow](./readme_img/t1.png)
 
-Concurrency generation control:
+1. After the natural language question is input into the system, it will be combined with the pre-set toolset description information to form a prompt and input into the LLM, allowing the LLM to select the appropriate tool for solving the problem.
+
+2. Retrieve the structural information of the data from the database (Dataframe data summary).
+
+3. Input the data summary and tool suggestion information into the LLM to write Python code to solve the problem.
+
+4. Extract the code from the LLM's response and execute it with the Python interpreter.
+
+5. If an exception occurs during code execution, combine the exception information with the problem code to form a new prompt and re-input it into the LLM for another attempt (return to step `3`). Continue until the code runs successfully or the maximum number of retries is exceeded.
+
+6. If no exception occurs during code execution, assert the program output. If it is not the expected type, combine the assertion information with the problem code to form a new prompt and re-input it into the LLM for another attempt (return to step `3`). Continue until the assertion is successful or the maximum number of retries is exceeded.
+
+7. Display the successful code execution output (charts) on the user interface and launch the interactive plotting interface based on the output data.
+
+
+### Concurrency generation control
 
 ![Concurrency Control](./readme_img/t3.png)
+
+Repeated feedback of exceptions and assertions can cause the prompt to become increasingly long, causing the LLM to lose focus and affect the generation effect. The LLM's first incorrect response can also affect subsequent generations. Starting over may yield better results.
+
+Therefore, multi-threaded concurrent execution is introduced to ask questions independently multiple times, reducing the probability of overall generation failure caused by unstable LLM outputs, and improving system stability and response speed.
 
 ## Display
 
