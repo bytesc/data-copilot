@@ -1,3 +1,4 @@
+import dashscope
 from langchain_community.llms import Tongyi
 # pip install -U langchain-community
 from langchain.chains import LLMChain
@@ -9,7 +10,7 @@ from llm_access.call_llm_test import call_llm
 
 from config.get_config import config_data
 
-
+dashscope.api_key = get_api.get_api_key_from_file()
 llm = Tongyi(dashscope_api_key=get_api.get_api_key_from_file(),
              model_name=config_data['llm']['model'])
 
