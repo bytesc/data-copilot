@@ -8,6 +8,8 @@ Utilizing natural language queries, this system intelligently parses database st
 
 [Personal website: www.bytesc.top](http://www.bytesc.top)
 
+display video: [./display_video.mp4](./display_video.mp4)
+
 🔔 For project-related inquiries, feel free to raise an issue in this repository. I typically respond within 24 hours.
 
 
@@ -70,6 +72,8 @@ Repeated feedback of exceptions and assertions can cause the prompt to become in
 Therefore, multi-threaded concurrent execution is introduced to ask questions independently multiple times, reducing the probability of overall generation failure caused by unstable LLM outputs, and improving system stability and response speed.
 
 ## Display
+
+display video: [./display_video.mp4](./display_video.mp4)
 
 Query Interface
 

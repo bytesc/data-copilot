@@ -9,6 +9,8 @@
 
 [个人网站：www.bytesc.top](http://www.bytesc.top) 
 
+演示视频: [./display_video.mp4](./display_video.mp4)
+
 🔔 如有项目相关问题，欢迎在本项目提出`issue`，我一般会在 24 小时内回复。
 
 
@@ -71,6 +73,8 @@
 所以引入多线程并发执行，同时多次独立提问，降低 LLM 输出不稳定导致整体生成失败的概率，提高系统稳定性和响应速度。
 
 ## 展示
+
+演示视频: [./display_video.mp4](./display_video.mp4)
 
 提问界面
 
