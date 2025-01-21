@@ -7,6 +7,11 @@
 
 🚩[English Readme](./README.en.md)
 
+### 相关项目
+- [基于大语言模型 (LLM) 的<u>**可解释型**</u>自然语言数据库查询系统 (RAG) https://github.com/bytesc/data-copilot-steps](https://github.com/bytesc/data-copilot-steps)
+- [基于大语言模型 (LLM)和并发预测模型的自然语言数据库查询系统 (RAG) (https://github.com/bytesc/data-copilot-v2](https://github.com/bytesc/data-copilot-v2)
+
+
 [个人网站：www.bytesc.top](http://www.bytesc.top) 
 
 演示视频: [./display_video.mp4](./display_video.mp4)

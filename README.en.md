@@ -6,6 +6,11 @@ Utilizing natural language queries, this system intelligently parses database st
 
 🚩[简体中文文档](./README.md)
 
+### Related Projects
+- [**<u>Interpretable</u>** Natural Language Database Query System (RAG) based on Large Language Models (LLM) https://github.com/bytesc/data-copilot-steps](https://github.com/bytesc/data-copilot-steps)
+- [Natural Language Database Query System (RAG) based on Large Language Models (LLM) and Concurrent Prediction Models https://github.com/bytesc/data-copilot-v2](https://github.com/bytesc/data-copilot-v2)
+
+
 [Personal website: www.bytesc.top](http://www.bytesc.top)
 
 display video: [./display_video.mp4](./display_video.mp4)
